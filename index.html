@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Washim Lagori Association | Amateur Lagori Federation of India</title>
+  <meta name="description"
+    content="Washim Lagori Association – promoting Lagori sport in Vidarbha, Maharashtra. Included in the 37th National Games, Goa. Meet our founder, president and secretary." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --gold: #c8a96e;
+      --gold-lt: #e8c98a;
+      --cream: #f5efe6;
+      --dark: #080a0e;
+      --mid: #12151c;
+      --rule: rgba(200, 169, 110, 0.25);
+    }
+
+    html {
+      scroll-behavior: auto;
+      /* GSAP handles smoothness */
+      overflow-x: hidden;
+    }
+
+    body {
+      background: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--cream);
+      overflow-x: hidden;
+    }
+
+    /* ============================================================
+       PERSON SECTIONS
+    ============================================================ */
+    .person-section {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Background image layer */
+    .person-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center top;
+      will-change: transform;
+      transform-origin: center center;
+    }
+
+    /* Gradient overlay */
+    .person-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right,
+          rgba(8, 10, 14, 0.92) 0%,
+          rgba(8, 10, 14, 0.70) 40%,
+          rgba(8, 10, 14, 0.20) 100%);
+      z-index: 1;
+    }
+
+    /* Decorative vertical rule */
+    .person-section::before {
+      content: '';
+      position: absolute;
+      left: 12%;
+      top: 10%;
+      bottom: 10%;
+      width: 1px;
+      background: var(--rule);
+      z-index: 2;
+    }
+
+    /* Content block */
+    .person-content {
+      position: relative;
+      z-index: 3;
+      padding: 0 8vw;
+      max-width: 680px;
+      width: 100%;
+      margin-left: 6vw;
+      opacity: 0;
+      transform: translateY(50px);
+    }
+
+    .person-tag {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .person-tag::before {
+      content: '';
+      display: inline-block;
+      width: 2rem;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .person-name {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(3.5rem, 7vw, 6.5rem);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      color: var(--cream);
+      margin-bottom: 1.5rem;
+    }
+
+    .person-role {
+      font-size: 0.85rem;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .person-divider {
+      width: 3rem;
+      height: 1px;
+      background: var(--rule);
+      margin-bottom: 1.5rem;
+    }
+
+    .person-desc {
+      font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(245, 239, 230, 0.75);
+      max-width: 400px;
+    }
+
+    /* Number badge top-right */
+    .section-number {
+      position: absolute;
+      top: 2rem;
+      right: 4vw;
+      z-index: 3;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 5rem;
+      color: rgba(200, 169, 110, 0.08);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* ============================================================
+       3D SECTION
+    ============================================================ */
+    #section-3d {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background: var(--dark);
+      overflow: hidden;
+    }
+
+    #three-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100% !important;
+      height: 100% !important;
+      opacity: 0;
+      /* fades in on load via GSAP */
+    }
+
+    /* 3D section overlay text */
+    .scene-label {
+      position: absolute;
+      bottom: 6vh;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      z-index: 10;
+      text-align: center;
+      opacity: 0;
+      /* fades in on load via GSAP */
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .scene-label h2 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .scene-label p {
+      font-size: 0.75rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(245, 239, 230, 0.45);
+    }
+
+    /* Fade-out overlay — covers 3D section as you scroll into person sections */
+    #section-3d-fadeout {
+      position: absolute;
+      inset: 0;
+      background: var(--dark);
+      z-index: 20;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Scroll hint */
+    .scroll-hint {
+      position: fixed;
+      bottom: 2.5rem;
+      right: 3rem;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      opacity: 1;
+      transition: opacity 0.5s;
+    }
+
+    .scroll-hint span {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245, 239, 230, 0.4);
+    }
+
+    .scroll-hint-line {
+      width: 1px;
+      height: 3rem;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: pulse-line 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-line {
+
+      0%,
+      100% {
+        opacity: 0.3;
+        transform: scaleY(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scaleY(0.7);
+      }
+    }
+
+    /* ============================================================
+       NAVBAR
+    ============================================================ */
+    .site-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 4vw;
+      background: rgba(8, 10, 14, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--rule);
+      transition: background 0.3s;
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.4rem;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245, 239, 230, 0.65);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+
+    .nav-ig {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      border: 1px solid var(--rule);
+      padding: 0.45rem 1rem;
+      border-radius: 2px;
+      transition: background 0.25s, border-color 0.25s;
+    }
+
+    .nav-ig:hover {
+      background: rgba(200, 169, 110, 0.12);
+      border-color: var(--gold);
+    }
+
+    /* ============================================================
+       ABOUT SECTION
+    ============================================================ */
+    .about-section {
+      position: relative;
+      background: var(--mid);
+      padding: 8rem 10vw;
+      overflow: hidden;
+    }
+
+    .about-section::before {
+      content: 'LAGORI';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(6rem, 18vw, 16rem);
+      color: rgba(200, 169, 110, 0.04);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .about-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .about-label::before {
+      content: '';
+      display: inline-block;
+      width: 2rem;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .about-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      color: var(--cream);
+      margin-bottom: 1.5rem;
+    }
+
+    .about-body {
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.9;
+      color: rgba(245, 239, 230, 0.7);
+      margin-bottom: 2rem;
+    }
+
+    .about-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: linear-gradient(135deg, rgba(200, 169, 110, 0.15), rgba(200, 169, 110, 0.05));
+      border: 1px solid var(--rule);
+      padding: 0.75rem 1.25rem;
+      border-radius: 3px;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .about-badge span {
+      font-size: 1.1rem;
+    }
+
+    .about-visual {
+      position: relative;
+      aspect-ratio: 4/5;
+      border: 1px solid var(--rule);
+      overflow: hidden;
+      border-radius: 3px;
+    }
+
+    .about-visual-inner {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #1a1d24, #0f1117);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .about-icon {
+      font-size: 5rem;
+      line-height: 1;
+    }
+
+    .about-visual-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 2rem;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-align: center;
+    }
+
+    .about-visual-sub {
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(245, 239, 230, 0.4);
+      text-align: center;
+      padding: 0 2rem;
+    }
+
+    /* ============================================================
+       STATS SECTION
+    ============================================================ */
+    .stats-section {
+      background: var(--dark);
+      padding: 6rem 10vw;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .stats-heading {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .stats-heading h2 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      letter-spacing: 0.12em;
+      color: var(--cream);
+    }
+
+    .stats-heading p {
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(245, 239, 230, 0.4);
+      margin-top: 0.5rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+
+    .stat-card {
+      background: var(--mid);
+      padding: 3rem 2rem;
+      text-align: center;
+      position: relative;
+      transition: background 0.3s;
+    }
+
+    .stat-card:hover {
+      background: #171a22;
+    }
+
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .stat-card:hover::after {
+      opacity: 1;
+    }
+
+    .stat-num {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(3rem, 5vw, 4.5rem);
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(245, 239, 230, 0.5);
+    }
+
+    /* ============================================================
+       HISTORY & RECOGNITION SECTION
+    ============================================================ */
+    .history-section {
+      background: var(--dark);
+      padding: 7rem 10vw;
+      overflow: hidden;
+    }
+
+    .history-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .history-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      color: var(--cream);
+      margin-bottom: 1rem;
+    }
+
+    .history-sub {
+      font-size: 1rem;
+      font-weight: 300;
+      color: rgba(245, 239, 230, 0.55);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    .history-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .hcard {
+      background: var(--mid);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 2rem 1.75rem;
+      transition: border-color 0.3s, transform 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hcard::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .hcard:hover {
+      border-color: rgba(200, 169, 110, 0.5);
+      transform: translateY(-4px);
+    }
+
+    .hcard:hover::before {
+      transform: scaleX(1);
+    }
+
+    .hcard-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .hcard-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.2rem;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .hcard-text {
+      font-size: 0.88rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: rgba(245, 239, 230, 0.65);
+    }
+
+    .hcard-text strong {
+      color: var(--gold-lt);
+    }
+
+    .hcard-text em {
+      font-style: italic;
+      color: rgba(245, 239, 230, 0.8);
+    }
+
+    .history-alfi {
+      text-align: center;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      color: rgba(245, 239, 230, 0.3);
+    }
+
+    .history-alfi a {
+      color: rgba(200, 169, 110, 0.6);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+
+    .history-alfi a:hover {
+      color: var(--gold);
+    }
+
+    @media (max-width: 900px) {
+      .history-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .history-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .history-section {
+        padding: 5rem 6vw;
+      }
+    }
+
+    /* ============================================================
+       SHARED SECTION HEADER (centered)
+    ============================================================ */
+    .section-header-center {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .section-title-center {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      color: var(--cream);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-sub-center {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: rgba(245, 239, 230, 0.55);
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* ============================================================
+       GALLERY SECTION
+    ============================================================ */
+    .gallery-section {
+      background: var(--mid);
+      padding: 7rem 10vw;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 200px;
+      gap: 6px;
+    }
+
+    .gphoto--tall {
+      grid-row: span 2;
+    }
+
+    .gphoto--wide {
+      grid-column: span 2;
+    }
+
+    .gphoto {
+      position: relative;
+      border-radius: 3px;
+      overflow: hidden;
+      cursor: pointer;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.3s;
+    }
+
+    .gphoto:hover {
+      transform: scale(1.02);
+      z-index: 2;
+    }
+
+    .gphoto::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(8, 10, 14, 0.85) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .gphoto:hover::after {
+      opacity: 1;
+    }
+
+    .gphoto-label {
+      position: absolute;
+      bottom: 0.9rem;
+      left: 1rem;
+      right: 1rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      z-index: 3;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .gphoto:hover .gphoto-label {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .gphoto--wide {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: 150px;
+      }
+
+      .gphoto--tall {
+        grid-row: span 1;
+      }
+
+      .gallery-section {
+        padding: 5rem 6vw;
+      }
+    }
+
+    /* ============================================================
+       PLAYERS SECTION
+    ============================================================ */
+    .players-section {
+      background: var(--dark);
+      padding: 7rem 10vw;
+      border-top: 1px solid var(--rule);
+    }
+
+    .players-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1.25rem;
+    }
+
+    .player-card {
+      background: var(--mid);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 1.75rem 1rem;
+      text-align: center;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .player-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+    }
+
+    .player-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c8a96e, #80622a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.2rem;
+      letter-spacing: 0.05em;
+      color: #080a0e;
+      margin: 0 auto 0.9rem;
+    }
+
+    .player-name {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--cream);
+      margin-bottom: 0.3rem;
+      line-height: 1.3;
+    }
+
+    .player-role {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    @media (max-width: 1100px) {
+      .players-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .players-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .players-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .players-section {
+        padding: 5rem 6vw;
+      }
+    }
+
+    /* ============================================================
+       WINNING JOURNEY / TIMELINE SECTION
+    ============================================================ */
+    .journey-section {
+      background: var(--mid);
+      padding: 7rem 10vw;
+      border-top: 1px solid var(--rule);
+    }
+
+    .journey-timeline {
+      position: relative;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .journey-timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--rule);
+      transform: translateX(-50%);
+    }
+
+    .jtl-item {
+      position: relative;
+      width: 46%;
+      margin-bottom: 3rem;
+    }
+
+    .jtl-left {
+      margin-right: auto;
+    }
+
+    .jtl-right {
+      margin-left: auto;
+    }
+
+    .jtl-dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--rule);
+      border: 2px solid var(--gold);
+      top: 1.2rem;
+    }
+
+    .jtl-left .jtl-dot {
+      right: -7.5%;
+    }
+
+    .jtl-right .jtl-dot {
+      left: -7.5%;
+    }
+
+    .jtl-dot--gold {
+      background: var(--gold);
+      width: 16px;
+      height: 16px;
+      box-shadow: 0 0 12px rgba(200, 169, 110, 0.6);
+    }
+
+    .jtl-card {
+      background: var(--dark);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 1.5rem 1.75rem;
+      transition: border-color 0.25s;
+    }
+
+    .jtl-card:hover {
+      border-color: rgba(200, 169, 110, 0.4);
+    }
+
+    .jtl-card--gold {
+      border-color: rgba(200, 169, 110, 0.5);
+      background: linear-gradient(135deg, #131009, #080a0e);
+      box-shadow: 0 0 30px rgba(200, 169, 110, 0.08);
+    }
+
+    .jtl-year {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 2.5rem;
+      color: rgba(200, 169, 110, 0.25);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+
+    .jtl-card--gold .jtl-year {
+      color: rgba(200, 169, 110, 0.5);
+    }
+
+    .jtl-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.15rem;
+      letter-spacing: 0.06em;
+      color: var(--cream);
+      margin-bottom: 0.4rem;
+    }
+
+    .jtl-place {
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .jtl-desc {
+      font-size: 0.85rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: rgba(245, 239, 230, 0.6);
+    }
+
+    .jtl-desc strong {
+      color: var(--gold-lt);
+    }
+
+    @media (max-width: 700px) {
+      .journey-timeline::before {
+        left: 10px;
+      }
+
+      .jtl-item {
+        width: 100%;
+        margin-left: 2rem !important;
+        margin-right: 0 !important;
+      }
+
+      .jtl-left .jtl-dot,
+      .jtl-right .jtl-dot {
+        left: -1.8rem;
+        right: auto;
+      }
+
+      .journey-section {
+        padding: 5rem 6vw;
+      }
+    }
+
+    /* ============================================================
+       CONNECT / INSTAGRAM SECTION
+    ============================================================ */
+    .connect-section {
+      background: var(--mid);
+      padding: 8rem 10vw;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .connect-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(200, 169, 110, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .connect-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+    }
+
+    .connect-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      letter-spacing: 0.05em;
+      color: var(--cream);
+      margin-bottom: 1rem;
+    }
+
+    .connect-desc {
+      font-size: 1rem;
+      font-weight: 300;
+      color: rgba(245, 239, 230, 0.6);
+      max-width: 480px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.8;
+    }
+
+    .connect-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: linear-gradient(135deg, #c8a96e, #e8c98a);
+      color: #080a0e;
+      font-weight: 600;
+      font-size: 0.82rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 1rem 2.5rem;
+      border-radius: 2px;
+      transition: opacity 0.25s, transform 0.25s;
+    }
+
+    .connect-btn:hover {
+      opacity: 0.88;
+      transform: translateY(-2px);
+    }
+
+    .connect-handle {
+      margin-top: 1.5rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
+      color: rgba(245, 239, 230, 0.35);
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .site-footer {
+      background: #040608;
+      padding: 3rem 10vw;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-brand {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.2rem;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+    }
+
+    .footer-copy {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: rgba(245, 239, 230, 0.3);
+    }
+
+    .footer-ig {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: rgba(245, 239, 230, 0.4);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+
+    .footer-ig:hover {
+      color: var(--gold);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 900px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .person-section::before {
+        display: none;
+      }
+
+      .person-content {
+        margin-left: 0;
+        padding: 0 6vw;
+      }
+
+      .person-overlay {
+        background: linear-gradient(to bottom,
+            rgba(8, 10, 14, 0.85) 0%,
+            rgba(8, 10, 14, 0.65) 100%);
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .about-section,
+      .stats-section,
+      .connect-section {
+        padding: 5rem 6vw;
+      }
+
+      .site-footer {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       STICKY NAVIGATION
+  ============================================================ -->
+  <nav class="site-nav" id="site-nav">
+    <a href="#section-3d" class="nav-logo">WLA</a>
+    <ul class="nav-links">
+      <li><a href="#section-3d">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#section-1">Members</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#players">Players</a></li>
+      <li><a href="#journey">Journey</a></li>
+      <li><a href="#connect">Connect</a></li>
+    </ul>
+    <a href="https://www.instagram.com/washim_lagori_association/" target="_blank" class="nav-ig">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="2" width="20" height="20" rx="5" />
+        <circle cx="12" cy="12" r="5" />
+        <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
+      </svg>
+      Follow
+    </a>
+  </nav>
+
+  <!-- Scroll hint -->
+  <div class="scroll-hint" id="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-hint-line"></div>
+  </div>
+
+  <!-- ============================================================
+       SECTION 4 — 3D Lagori Animation (TOP)
+  ============================================================ -->
+  <section id="section-3d">
+    <canvas id="three-canvas"></canvas>
+    <div id="section-3d-fadeout"></div>
+    <div class="scene-label" id="scene-label">
+      <h2>Lagori</h2>
+      <p>Amateur Lagori Federation of India</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 1 — Founder
+  ============================================================ -->
+  <section class="person-section" id="section-1">
+    <div class="person-bg" id="bg-1" style="background-image: url('images/santosh%20sir.jpeg');">
+    </div>
+    <div class="person-overlay"></div>
+    <div class="section-number">01</div>
+
+    <div class="person-content" id="content-1">
+      <div class="person-tag">Amateur Lagori Federation of India</div>
+      <h1 class="person-name">Late. Shri.<br>Santosh Gurav</h1>
+      <div class="person-role">Founder – Amateur Lagori Federation of India</div>
+      <div class="person-divider"></div>
+      <p class="person-desc">Father Of Lagori, Krida Ratna Awardee, Krida Maharshi Awardee Raigad Bhushan Awardee.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2 — President
+  ============================================================ -->
+  <section class="person-section" id="section-2">
+    <div class="person-bg" id="bg-2" style="background-image: url('images/CT.jpeg');">
+    </div>
+    <div class="person-overlay"></div>
+    <div class="section-number">02</div>
+
+    <div class="person-content" id="content-2">
+      <div class="person-tag">Washim Lagori Association</div>
+      <h1 class="person-name">Mr. Chandrakant<br>Dada Thakare</h1>
+      <div class="person-role">President – Washim Lagori Association</div>
+      <div class="person-divider"></div>
+      <p class="person-desc">State Vice President of Nationalist Congress Party Maharashtra and President of Zilla
+        Parishad Washim
+        Parishad.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3 — Secretary
+  ============================================================ -->
+  <section class="person-section" id="section-3">
+    <div class="person-bg" id="bg-3" style="background-image: url('images/Sir.jpeg');">
+    </div>
+    <div class="person-overlay"></div>
+    <div class="section-number">03</div>
+
+    <div class="person-content" id="content-3">
+      <div class="person-tag">Washim Lagori Association</div>
+      <h1 class="person-name">Mr. Ganajan<br>Vitkare</h1>
+      <div class="person-role">Secretary – Washim Lagori Association</div>
+      <div class="person-divider"></div>
+      <p class="person-desc">Dedicated to managing and strengthening Lagori activities across the district.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT SECTION
+  ============================================================ -->
+  <section class="about-section" id="about">
+    <div class="about-grid">
+      <div class="about-left">
+        <div class="about-label">The Sport</div>
+        <h2 class="about-title">India's Ancient<br>Game, Reimagined</h2>
+        <p class="about-body">
+          Lagori — also known as <strong>Pittu Garam</strong> or <strong>Seven Stones</strong> — is a traditional Indian
+          outdoor sport
+          played for over <strong>5,000 years</strong>. Two teams compete: one tries to knock down a stack of flat
+          stones with a rubber ball, while the other attempts to rebuild the stack before being hit.
+        </p>
+        <p class="about-body">
+          Associated with Lord Shree Krishna himself, Lagori is referenced in ancient texts including
+          <em>ShreeKrishna Mahatmya</em> and the <em>Mahabharata</em>. The Washim Lagori Association
+          is proudly affiliated with the <strong>Amateur Lagori Federation of India (ALFI)</strong> — the national body
+          driving this heritage sport back into the spotlight.
+        </p>
+        <div class="about-badge">
+          <span>🏆</span>
+          Featured at the 37th National Games, Goa 2023
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="about-visual-inner">
+          <div class="about-icon">🪨</div>
+          <div class="about-visual-title">5000 Years of Lagori</div>
+          <div class="about-visual-sub">From village fields of Maharashtra to national arenas — a sport that unites
+            generations through play</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       HISTORY & GLOBAL RECOGNITION SECTION
+  ============================================================ -->
+  <section class="history-section" id="history">
+    <div class="history-header">
+      <div class="about-label" style="justify-content:center;">Global Heritage</div>
+      <h2 class="history-title">Recognized Across<br>the World</h2>
+      <p class="history-sub">Lagori's roots stretch across continents — documented in history books, census records, and
+        academic journals worldwide.</p>
+    </div>
+    <div class="history-cards">
+      <div class="hcard">
+        <div class="hcard-icon">🇮🇳</div>
+        <div class="hcard-title">India — 1961 Census</div>
+        <div class="hcard-text">Lagori is officially mentioned in the <em>1961 Census of India</em> (Vol. 11, Part 6,
+          Issue 37), cementing its place in India's cultural record.</div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-icon">📚</div>
+        <div class="hcard-title">American Library Association</div>
+        <div class="hcard-text">Featured in the ALA's acclaimed book <em>"Venture into Cultures"</em> — acknowledging
+          Lagori as a globally significant traditional game.</div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-icon">🕌</div>
+        <div class="hcard-title">Iran — Haftsang</div>
+        <div class="hcard-text">Known as <strong>Haftsang</strong> in Iran, the game appears in Iranian Art & Culture
+          and is supported by academic research from Farhangian University (2012).</div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-icon">🇦🇲</div>
+        <div class="hcard-title">Armenia — Philately Stamps</div>
+        <div class="hcard-text">Armenia commemorated Lagori with official Children's Philately Stamps, recognising it as
+          a shared part of global childhood heritage.</div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-icon">✨</div>
+        <div class="hcard-title">Lord Krishna's Game</div>
+        <div class="hcard-text">Referenced in <em>ShreeKrishna Mahatmya</em> (chapters 272–317) and <em>Shrikrishna
+            Charitra</em> — Lagori was played by Lord Krishna and is linked to the Mahabharata era.</div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-icon">🌍</div>
+        <div class="hcard-title">Taylor & Francis — 2008</div>
+        <div class="hcard-text">Recognised in <em>"The City of South Asia"</em> (Taylor & Francis, 2008) as a culturally
+          significant sport woven into the fabric of South Asian life.</div>
+      </div>
+    </div>
+    <div class="history-alfi">
+      <span>Source:</span>
+      <a href="https://indialagori.in" target="_blank">indialagori.in — Amateur Lagori Federation of India (ALFI)</a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       STATS SECTION
+  ============================================================ -->
+  <section class="stats-section" id="stats">
+    <div class="stats-heading">
+      <h2>By the Numbers</h2>
+      <p>Washim Lagori Association — Growing Strong</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" data-target="389" id="stat-followers">0</div>
+        <div class="stat-label">Instagram Followers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" data-target="238" id="stat-posts">0</div>
+        <div class="stat-label">Posts Shared</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" data-target="37" id="stat-games">0</div>
+        <div class="stat-label">National Games Edition</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" data-target="7" id="stat-stones">0</div>
+        <div class="stat-label">Stones in the Stack</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       GALLERY SECTION
+  ============================================================ -->
+  <section class="gallery-section" id="gallery">
+    <div class="section-header-center">
+      <div class="about-label" style="justify-content:center;">Our Memories</div>
+      <h2 class="section-title-center">Photo Gallery</h2>
+      <p class="section-sub-center">Moments from the field — tournaments, celebrations, training camps &amp; more.<br>
+        <em style="font-size:0.78rem;color:rgba(245,239,230,0.35);">To update: replace the background-color on each
+          .gphoto div with background-image:url('your-photo.jpg')</em>
+      </p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gphoto gphoto--tall" style="background-color:#1a2030;" data-label="District Tournament 2023">
+        <div class="gphoto-label">District Tournament 2023</div>
+      </div>
+      <div class="gphoto" style="background-color:#12201a;" data-label="Opening Ceremony">
+        <div class="gphoto-label">Opening Ceremony</div>
+      </div>
+      <div class="gphoto" style="background-color:#201a12;" data-label="Team Practice Session">
+        <div class="gphoto-label">Team Practice Session</div>
+      </div>
+      <div class="gphoto gphoto--wide" style="background-color:#1a1220;" data-label="37th National Games — Goa 2023">
+        <div class="gphoto-label">37th National Games — Goa 2023</div>
+      </div>
+      <div class="gphoto" style="background-color:#201218;" data-label="Award Ceremony">
+        <div class="gphoto-label">Award Ceremony</div>
+      </div>
+      <div class="gphoto gphoto--tall" style="background-color:#121820;" data-label="Youth Training Camp">
+        <div class="gphoto-label">Youth Training Camp</div>
+      </div>
+      <div class="gphoto" style="background-color:#1a2018;" data-label="Victory Celebration">
+        <div class="gphoto-label">Victory Celebration</div>
+      </div>
+      <div class="gphoto gphoto--wide" style="background-color:#20181a;"
+        data-label="Washim Inter-District Championship">
+        <div class="gphoto-label">Washim Inter-District Championship</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PLAYERS SECTION
+  ============================================================ -->
+  <section class="players-section" id="players">
+    <div class="section-header-center">
+      <div class="about-label" style="justify-content:center;">Our Squad</div>
+      <h2 class="section-title-center">Meet the Players</h2>
+      <p class="section-sub-center">The warriors who represent Washim Lagori Association on every field.</p>
+    </div>
+    <div class="players-grid">
+      <div class="player-card">
+        <div class="player-avatar">HG</div>
+        <div class="player-name">Heramb Garde</div>
+        <div class="player-role">Captain · Striker</div>
+      </div>
+      <div class="player-card">
+        <div class="player-avatar">RK</div>
+        <div class="player-name">Rohan Kale</div>
+        <div class="player-role">Vice Captain · Defender</div>
+      </div>
+      <div class="player-card">
+        <div class="player-avatar">BR</div>
+        <div class="player-name">Bhushan Raut</div>
+        <div class="player-role">Striker · All-rounder</div>
+      </div>
+      <div class="player-card">
+        <div class="player-avatar">DM</div>
+        <div class="player-name">Devesh Mahakal</div>
+        <div class="player-role">Defender</div>
+      </div>
+      <div class="player-card">
+        <div class="player-avatar">PK</div>
+        <div class="player-name">Priyanshu Khodke</div>
+        <div class="player-role">Striker</div>
+      </div>
+      <div class="player-card">
+        <div class="player-avatar">PW</div>
+        <div class="player-name">Pravin Wankhede</div>
+        <div class="player-role">All-rounder</div>
+      </div>
+      <div class="player-card">
+        <div class="player-avatar">SB</div>
+        <div class="player-name">Sunil Bhagat</div>
+        <div class="player-role">Defender</div>
+      </div>
+      <div class="player-card">
+        <div class="player-avatar">NK</div>
+        <div class="player-name">Nitin Kulkarni</div>
+        <div class="player-role">Striker</div>
+      </div>
+      <div class="player-card">
+        <div class="player-avatar">DG</div>
+        <div class="player-name">Dnyaneshwar Gore</div>
+        <div class="player-role">All-rounder</div>
+      </div>
+      <div class="player-card">
+        <div class="player-avatar">RN</div>
+        <div class="player-name">Ramesh Nimkar</div>
+        <div class="player-role">Defender</div>
+      </div>
+      <div class="player-card">
+        <div class="player-avatar">AB</div>
+        <div class="player-name">Ashok Bansode</div>
+        <div class="player-role">Striker</div>
+      </div>
+      <div class="player-card">
+        <div class="player-avatar">YM</div>
+        <div class="player-name">Yogesh More</div>
+        <div class="player-role">All-rounder</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WINNING JOURNEY SECTION
+  ============================================================ -->
+  <section class="journey-section" id="journey">
+    <div class="section-header-center">
+      <div class="about-label" style="justify-content:center;">Our Legacy</div>
+      <h2 class="section-title-center">Winning Journey</h2>
+      <p class="section-sub-center">Every trophy, every title — the milestones that define the Washim Lagori
+        Association.</p>
+    </div>
+    <div class="journey-timeline">
+
+      <div class="jtl-item jtl-left">
+        <div class="jtl-dot"></div>
+        <div class="jtl-card">
+          <div class="jtl-year">2018</div>
+          <div class="jtl-title">District Lagori Championship</div>
+          <div class="jtl-place">🥇 1st Place — Washim District</div>
+          <div class="jtl-desc">Our very first district-level title. The team showed exceptional teamwork and
+            coordination, defeating 8 teams to claim the gold.</div>
+        </div>
+      </div>
+
+      <div class="jtl-item jtl-right">
+        <div class="jtl-dot"></div>
+        <div class="jtl-card">
+          <div class="jtl-year">2019</div>
+          <div class="jtl-title">Vidarbha Regional Championship</div>
+          <div class="jtl-place">🥈 2nd Place — Vidarbha Region</div>
+          <div class="jtl-desc">Competed against 14 district teams from across Vidarbha and reached the finals — a proud
+            moment for Washim on a regional platform.</div>
+        </div>
+      </div>
+
+      <div class="jtl-item jtl-left">
+        <div class="jtl-dot"></div>
+        <div class="jtl-card">
+          <div class="jtl-year">2020</div>
+          <div class="jtl-title">Maharashtra State Lagori Tournament</div>
+          <div class="jtl-place">🥉 3rd Place — State Level</div>
+          <div class="jtl-desc">First state-level podium finish. This achievement put Washim Lagori Association on the
+            Maharashtra sports map.</div>
+        </div>
+      </div>
+
+      <div class="jtl-item jtl-right">
+        <div class="jtl-dot"></div>
+        <div class="jtl-card">
+          <div class="jtl-year">2021</div>
+          <div class="jtl-title">Washim Zilha Parishad Invitational Cup</div>
+          <div class="jtl-place">🥇 Champions — Washim</div>
+          <div class="jtl-desc">Hosted on home ground, our team delivered a dominant performance winning all 6 matches
+            without a single defeat.</div>
+        </div>
+      </div>
+
+      <div class="jtl-item jtl-left">
+        <div class="jtl-dot"></div>
+        <div class="jtl-card">
+          <div class="jtl-year">2022</div>
+          <div class="jtl-title">Maharashtra State Championship</div>
+          <div class="jtl-place">🥇 State Champions</div>
+          <div class="jtl-desc">Our biggest victory yet — claiming the Maharashtra State Lagori Championship title and
+            earning a spot in the national selection process.</div>
+        </div>
+      </div>
+
+      <div class="jtl-item jtl-right jtl-featured">
+        <div class="jtl-dot jtl-dot--gold"></div>
+        <div class="jtl-card jtl-card--gold">
+          <div class="jtl-year">2023</div>
+          <div class="jtl-title">37th National Games — Goa</div>
+          <div class="jtl-place">🏆 National Representation</div>
+          <div class="jtl-desc">The pinnacle of our journey — players from Washim Lagori Association represented
+            Maharashtra at the <strong>37th National Games in Goa</strong>, competing on India's biggest multi-sport
+            stage.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONNECT / INSTAGRAM SECTION
+  ============================================================ -->
+  <section class="connect-section" id="connect">
+    <div class="connect-label">Stay Connected</div>
+    <h2 class="connect-title">Follow Our Journey</h2>
+    <p class="connect-desc">
+      238 posts of tournaments, celebrations, and the spirit of Lagori from Washim, Vidarbha.
+      Join our growing community and be part of the movement.
+    </p>
+    <a href="https://www.instagram.com/washim_lagori_association/" target="_blank" class="connect-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="2" width="20" height="20" rx="5" />
+        <circle cx="12" cy="12" r="5" />
+        <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
+      </svg>
+      Follow on Instagram
+    </a>
+    <div class="connect-handle">@washim_lagori_association</div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="site-footer">
+    <div class="footer-brand">Washim Lagori Association</div>
+    <div class="footer-copy">© 2025 Amateur Lagori Federation of India · Washim, Vidarbha, Maharashtra</div>
+    <a href="https://www.instagram.com/washim_lagori_association/" target="_blank"
+      class="footer-ig">@washim_lagori_association</a>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    // ─────────────────────────────────────────────────────────────
+    // 1. GSAP PLUGIN REGISTRATION
+    // ─────────────────────────────────────────────────────────────
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ─────────────────────────────────────────────────────────────
+    // 2. THREE.JS — SCENE SETUP
+    // ─────────────────────────────────────────────────────────────
+    const isMobile = window.innerWidth < 640;
+
+    const canvas = document.getElementById('three-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile, alpha: false });
+    // Cap pixel ratio at 1.5 for performance
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x080a0e, 1);
+
+    // Shadows only on desktop
+    if (!isMobile) {
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    }
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x080a0e, 0.03);
+
+    const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 3.5, 9);
+    camera.lookAt(0, 1.5, 0);
+
+    // Camera shake proxy — GSAP tweens this, render loop applies it
+    const shakeProxy = { x: 0, y: 0 };
+
+    // ── Lighting ──
+    const ambient = new THREE.AmbientLight(0xffffff, 0.45);
+    scene.add(ambient);
+
+    const sunLight = new THREE.DirectionalLight(0xffe8b0, 1.8);
+    sunLight.position.set(5, 10, 5);
+    if (!isMobile) {
+      sunLight.castShadow = true;
+      sunLight.shadow.mapSize.width = 1024;
+      sunLight.shadow.mapSize.height = 1024;
+      sunLight.shadow.camera.near = 0.5;
+      sunLight.shadow.camera.far = 50;
+      sunLight.shadow.camera.left = -8;
+      sunLight.shadow.camera.right = 8;
+      sunLight.shadow.camera.top = 8;
+      sunLight.shadow.camera.bottom = -8;
+    }
+    scene.add(sunLight);
+
+    const fillLight = new THREE.PointLight(0x2050cc, 0.4, 20);
+    fillLight.position.set(-5, 3, -3);
+    scene.add(fillLight);
+
+    // ── Ground ──
+    const groundGeo = new THREE.PlaneGeometry(30, 30);
+    const groundMat = new THREE.MeshStandardMaterial({ color: 0x1a1d24, roughness: 0.9, metalness: 0.1 });
+    const ground = new THREE.Mesh(groundGeo, groundMat);
+    ground.rotation.x = -Math.PI / 2;
+    ground.receiveShadow = true;
+    scene.add(ground);
+
+    // ── Stones (reduced segments: 16 instead of 24) ──
+    const stoneData = [
+      { radiusT: 0.72, radiusB: 0.78, h: 0.18 },
+      { radiusT: 0.65, radiusB: 0.70, h: 0.17 },
+      { radiusT: 0.58, radiusB: 0.63, h: 0.16 },
+      { radiusT: 0.52, radiusB: 0.56, h: 0.15 },
+      { radiusT: 0.45, radiusB: 0.49, h: 0.14 },
+      { radiusT: 0.38, radiusB: 0.42, h: 0.13 },
+      { radiusT: 0.30, radiusB: 0.34, h: 0.12 },
+    ];
+
+    const stoneMat = new THREE.MeshStandardMaterial({ color: 0xc8a96e, roughness: 0.7, metalness: 0.15 });
+    const stones = [];
+    let yOffset = 0;
+
+    stoneData.forEach((d) => {
+      const geo = new THREE.CylinderGeometry(d.radiusT, d.radiusB, d.h, 16); // 16 segments
+      const mesh = new THREE.Mesh(geo, stoneMat.clone());
+      mesh.castShadow = !isMobile;
+      mesh.receiveShadow = !isMobile;
+      mesh.position.set(
+        (Math.random() - 0.5) * 0.05,
+        yOffset + d.h / 2,
+        (Math.random() - 0.5) * 0.05
+      );
+      yOffset += d.h + 0.005;
+      mesh.userData.scatterX = (Math.random() - 0.5) * 6;
+      mesh.userData.scatterZ = (Math.random() - 0.5) * 6;
+      mesh.userData.scatterY = Math.random() * 2 + 0.5;
+      mesh.userData.rotX = (Math.random() - 0.5) * Math.PI * 3;
+      mesh.userData.rotZ = (Math.random() - 0.5) * Math.PI * 3;
+      scene.add(mesh);
+      stones.push(mesh);
+    });
+
+    // ── Ball (reduced segments: 20) ──
+    const ballGeo = new THREE.SphereGeometry(0.38, 20, 20);
+    const ballMat = new THREE.MeshStandardMaterial({ color: 0xe03030, roughness: 0.4, metalness: 0.05 });
+    const ball = new THREE.Mesh(ballGeo, ballMat);
+    ball.castShadow = !isMobile;
+    ball.position.set(-7, 0.38, 2);
+    scene.add(ball);
+
+    const camEnd = { x: 0, y: 2.5, z: 6.5 };
+
+    // ─────────────────────────────────────────────────────────────
+    // 3. RENDER LOOP
+    // ─────────────────────────────────────────────────────────────
+    function renderLoop() {
+      requestAnimationFrame(renderLoop);
+      // Apply camera shake offset on top of GSAP-driven position
+      camera.position.x += shakeProxy.x;
+      camera.position.y += shakeProxy.y;
+      renderer.render(scene, camera);
+      camera.position.x -= shakeProxy.x;
+      camera.position.y -= shakeProxy.y;
+    }
+    renderLoop();
+
+    // ─────────────────────────────────────────────────────────────
+    // 4. CINEMATIC LOAD-IN ANIMATION (page load — no scroll needed)
+    // ─────────────────────────────────────────────────────────────
+    const loadTL = gsap.timeline({ delay: 0.2 });
+
+    // Canvas fades in
+    loadTL.to('#three-canvas', {
+      opacity: 1,
+      duration: 1.4,
+      ease: 'power2.out',
+    }, 0);
+
+    // Title slides up and fades in
+    loadTL.to('#scene-label', {
+      opacity: 1,
+      y: 0,           // CSS starts at translateY(20px), we animate to 0
+      duration: 1.2,
+      ease: 'power3.out',
+    }, 0.5);
+
+    // ─────────────────────────────────────────────────────────────
+    // 5. LAGORI SCROLL ANIMATION — pinned, scrubbed timeline
+    // ─────────────────────────────────────────────────────────────
+    /*
+      Timeline progress 0 → 1:
+      0.00–0.35 : Ball approaches stones
+      0.35–0.50 : Impact — stones scatter, camera shake
+      0.50–1.00 : Stones settle, camera pushes forward
+    */
+    const lagoriTL = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#section-3d',
+        start: 'top top',
+        end: '+=220%',
+        pin: true,
+        scrub: 1.2,
+        anticipatePin: 1,
+      }
+    });
+
+    // Ball approach — accelerates (power2.in)
+    lagoriTL.to(ball.position, {
+      x: -0.1, y: 0.38, z: 0.6,
+      ease: 'power2.in',
+      duration: 0.35,
+    }, 0);
+
+    // Ball post-impact deflection
+    lagoriTL.to(ball.position, {
+      x: 0.4, y: 0.65, z: -1.8,
+      ease: 'power2.out',
+      duration: 0.15,
+    }, 0.35);
+
+    // Camera shake at impact (shakeProxy, not camera directly — render loop applies it)
+    lagoriTL.to(shakeProxy, {
+      x: 0.12, y: 0.08,
+      duration: 0.04,
+      ease: 'none',
+      yoyo: true,
+      repeat: 5,
+    }, 0.35);
+
+    // Stones scatter (staggered, top stones first = index 6 down to 0)
+    stones.forEach((stone, i) => {
+      const delay = 0.37 + (stones.length - 1 - i) * 0.035;
+
+      lagoriTL.to(stone.position, {
+        x: stone.userData.scatterX,
+        y: stone.userData.scatterY,
+        z: stone.userData.scatterZ,
+        ease: 'power3.out',
+        duration: 0.5,
+      }, delay);
+
+      lagoriTL.to(stone.rotation, {
+        x: stone.userData.rotX,
+        z: stone.userData.rotZ,
+        ease: 'power2.out',
+        duration: 0.5,
+      }, delay);
+
+      // Stones fall to ground
+      lagoriTL.to(stone.position, {
+        y: 0.09,
+        ease: 'bounce.out',
+        duration: 0.22,
+      }, delay + 0.5);
+    });
+
+    // Camera moves forward slowly during scatter phase
+    lagoriTL.to(camera.position, {
+      x: camEnd.x, y: camEnd.y, z: camEnd.z,
+      ease: 'power1.inOut',
+      duration: 0.55,
+      onUpdate: () => camera.lookAt(0, 1.2, 0),
+    }, 0.42);
+
+    // ─────────────────────────────────────────────────────────────
+    // 6. 3D SECTION FADE-OUT → FOUNDER FADE-IN TRANSITION
+    // ─────────────────────────────────────────────────────────────
+    // The dark overlay over the 3D canvas fades in as the pin ends
+    // making the transition into section-1 feel connected
+    ScrollTrigger.create({
+      trigger: '#section-1',
+      start: 'top 90%',
+      end: 'top 0%',
+      scrub: true,
+      onUpdate: (self) => {
+        document.getElementById('section-3d-fadeout').style.opacity = self.progress;
+      }
+    });
+
+    // ─────────────────────────────────────────────────────────────
+    // 7. PERSON SECTIONS — enter + exit animations
+    // ─────────────────────────────────────────────────────────────
+    const personSections = [
+      { section: '#section-1', bg: '#bg-1', content: '#content-1' },
+      { section: '#section-2', bg: '#bg-2', content: '#content-2' },
+      { section: '#section-3', bg: '#bg-3', content: '#content-3' },
+    ];
+
+    personSections.forEach(({ section, bg, content }) => {
+      // Content: fade in + rise on enter, fade out + rise on exit
+      gsap.fromTo(content,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 72%',
+            end: 'top 28%',
+            toggleActions: 'play none none reverse',
+          }
+        }
+      );
+
+      // Exit animation: content rises and fades as section scrolls out
+      gsap.to(content, {
+        opacity: 0,
+        y: -40,
+        ease: 'power2.in',
+        scrollTrigger: {
+          trigger: section,
+          start: 'bottom 60%',
+          end: 'bottom 10%',
+          scrub: true,
+        }
+      });
+
+      // Background zoom — subtle parallax throughout scroll
+      gsap.fromTo(bg,
+        { scale: 1 },
+        {
+          scale: 1.1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+          }
+        }
+      );
+    });
+
+    // ─────────────────────────────────────────────────────────────
+    // 8. SCROLL HINT — hide after first scroll
+    // ─────────────────────────────────────────────────────────────
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 80) {
+        const hint = document.getElementById('scroll-hint');
+        hint.style.opacity = '0';
+        hint.style.pointerEvents = 'none';
+      }
+    }, { passive: true });
+
+    // ─────────────────────────────────────────────────────────────
+    // 9. RESIZE HANDLER
+    // ─────────────────────────────────────────────────────────────
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      ScrollTrigger.refresh();
+    });
+
+    // ─────────────────────────────────────────────────────────────
+    // 10. STATS COUNTER ANIMATION
+    // ─────────────────────────────────────────────────────────────
+    function animateCounter(el) {
+      const target = parseInt(el.dataset.target, 10);
+      const duration = 1800;
+      const start = performance.now();
+      function update(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(eased * target);
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          document.querySelectorAll('.stat-num').forEach(animateCounter);
+          statObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const statsSection = document.getElementById('stats');
+    if (statsSection) statObserver.observe(statsSection);
+
+    // ─────────────────────────────────────────────────────────────
+    // 11. NAVBAR — darken on scroll
+    // ─────────────────────────────────────────────────────────────
+    const nav = document.getElementById('site-nav');
+    window.addEventListener('scroll', () => {
+      nav.style.background = window.scrollY > 60
+        ? 'rgba(8,10,14,0.97)'
+        : 'rgba(8,10,14,0.85)';
+    }, { passive: true });
+
+  </script>
+</body>
+
+</html>
