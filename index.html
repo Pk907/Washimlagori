@@ -64,8 +64,10 @@
       height: 100vh;
       overflow: hidden;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      align-items: flex-end;
+      /* anchor content to the bottom */
+      justify-content: flex-start;
+      /* keep text left-aligned */
     }
 
     /* Background image layer */
@@ -78,14 +80,20 @@
       transform-origin: center center;
     }
 
-    /* Gradient overlay */
+    /* Gradient overlay — light at top (face visible), dark at bottom (text readable) */
     .person-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to right,
-          rgba(8, 10, 14, 0.92) 0%,
-          rgba(8, 10, 14, 0.70) 40%,
-          rgba(8, 10, 14, 0.20) 100%);
+      background: linear-gradient(to bottom,
+          rgba(8, 10, 14, 0.10) 0%,
+          /* almost transparent — face visible */
+          rgba(8, 10, 14, 0.25) 40%,
+          /* slight tint mid section */
+          rgba(8, 10, 14, 0.72) 70%,
+          /* darkens toward text */
+          rgba(8, 10, 14, 0.90) 100%
+          /* dark band behind text */
+        );
       z-index: 1;
     }
 
@@ -101,16 +109,25 @@
       z-index: 2;
     }
 
-    /* Content block */
+    /* Content block — pinned to bottom of section */
     .person-content {
       position: relative;
       z-index: 3;
-      padding: 0 8vw;
+      padding: 0 6vw 4rem 6vw;
+      /* bottom padding lifts text off edge */
       max-width: 680px;
       width: 100%;
       margin-left: 6vw;
       opacity: 0;
       transform: translateY(50px);
+    }
+
+    @media (max-width: 640px) {
+      .person-content {
+        margin-left: 0;
+        padding: 0 6vw 3rem 6vw;
+        max-width: 100%;
+      }
     }
 
     .person-tag {
@@ -1174,14 +1191,12 @@
 
       .person-content {
         margin-left: 0;
-        padding: 0 6vw;
+        padding: 0 6vw 3rem 6vw;
+        /* include bottom spacing on mobile */
+        max-width: 100%;
       }
 
-      .person-overlay {
-        background: linear-gradient(to bottom,
-            rgba(8, 10, 14, 0.85) 0%,
-            rgba(8, 10, 14, 0.65) 100%);
-      }
+      /* overlay inherits the new gradient — no override needed */
 
       .stats-grid {
         grid-template-columns: 1fr 1fr;
@@ -1432,28 +1447,30 @@
       </p>
     </div>
     <div class="gallery-grid">
-      <div class="gphoto gphoto--tall" style="background-color:#1a2030;" data-label="District Tournament 2023">
+      <div class="gphoto gphoto--tall" style="background-image: url('images/1.jpeg');"
+        data-label="District Tournament 2023">
         <div class="gphoto-label">District Tournament 2023</div>
       </div>
-      <div class="gphoto" style="background-color:#12201a;" data-label="Opening Ceremony">
+      <div class="gphoto" style="background-image: url('images/2.jpeg');" data-label="Opening Ceremony">
         <div class="gphoto-label">Opening Ceremony</div>
       </div>
-      <div class="gphoto" style="background-color:#201a12;" data-label="Team Practice Session">
+      <div class="gphoto" style="background-image: url('images/3.jpeg');" data-label="Team Practice Session">
         <div class="gphoto-label">Team Practice Session</div>
       </div>
-      <div class="gphoto gphoto--wide" style="background-color:#1a1220;" data-label="37th National Games — Goa 2023">
+      <div class="gphoto gphoto--wide" style="background-image: url('images/4.jpeg');"
+        data-label="37th National Games — Goa 2023">
         <div class="gphoto-label">37th National Games — Goa 2023</div>
       </div>
-      <div class="gphoto" style="background-color:#201218;" data-label="Award Ceremony">
+      <div class="gphoto" style="background-image: url('images/5.jpeg');" data-label="Award Ceremony">
         <div class="gphoto-label">Award Ceremony</div>
       </div>
-      <div class="gphoto gphoto--tall" style="background-color:#121820;" data-label="Youth Training Camp">
+      <div class="gphoto gphoto--tall" style="background-image: url('images/6.jpeg');" data-label="Youth Training Camp">
         <div class="gphoto-label">Youth Training Camp</div>
       </div>
-      <div class="gphoto" style="background-color:#1a2018;" data-label="Victory Celebration">
+      <div class="gphoto" style="background-image: url('images/7.jpeg');" data-label="Victory Celebration">
         <div class="gphoto-label">Victory Celebration</div>
       </div>
-      <div class="gphoto gphoto--wide" style="background-color:#20181a;"
+      <div class="gphoto gphoto--wide" style="background-image: url('images/8.jpeg');"
         data-label="Washim Inter-District Championship">
         <div class="gphoto-label">Washim Inter-District Championship</div>
       </div>
