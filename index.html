@@ -859,18 +859,108 @@
     }
 
     .player-avatar {
-      width: 56px;
-      height: 56px;
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
       background: linear-gradient(135deg, #c8a96e, #80622a);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Bebas Neue', cursive;
-      font-size: 1.2rem;
-      letter-spacing: 0.05em;
-      color: #080a0e;
       margin: 0 auto 0.9rem;
+      overflow: hidden;
+      border: 2px solid rgba(200, 169, 110, 0.5);
+      box-shadow: 0 0 14px rgba(200, 169, 110, 0.2);
+      transition: box-shadow 0.3s;
+    }
+
+    .player-card:hover .player-avatar {
+      box-shadow: 0 0 22px rgba(200, 169, 110, 0.5);
+    }
+
+    .player-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ============================================================
+       FLOATING CONTACT BUTTON
+    ============================================================ */
+    .contact-fab {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: linear-gradient(135deg, #c8a96e, #e8c98a);
+      color: #080a0e;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(200, 169, 110, 0.45);
+      transition: transform 0.25s, box-shadow 0.25s;
+      user-select: none;
+    }
+
+    .contact-fab:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 28px rgba(200, 169, 110, 0.65);
+    }
+
+    .contact-popup {
+      position: fixed;
+      bottom: 96px;
+      right: 24px;
+      background: #12151c;
+      color: var(--cream);
+      padding: 1.25rem 1.5rem;
+      border-radius: 10px;
+      border: 1px solid var(--rule);
+      display: none;
+      flex-direction: column;
+      gap: 0.75rem;
+      z-index: 999;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      min-width: 200px;
+      animation: popIn 0.2s ease;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .contact-popup p {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245, 239, 230, 0.45);
+      margin: 0;
+    }
+
+    .contact-popup a {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+
+    .contact-popup a:hover {
+      color: var(--gold-lt);
     }
 
     .player-name {
@@ -1679,73 +1769,78 @@
     </div>
     <div class="players-grid">
       <div class="player-card">
-        <div class="player-avatar">HG</div>
+        <div class="player-avatar"><img src="images/players/heramb.jpeg" alt="Heramb Garde"></div>
         <div class="player-name">Heramb Garde</div>
         <div class="player-role">National Player</div>
       </div>
       <div class="player-card">
-        <div class="player-avatar">RK</div>
+        <div class="player-avatar"><img src="images/players/rohan.jpeg" alt="Rohan Kale"></div>
         <div class="player-name">Rohan Kale</div>
         <div class="player-role">National Player</div>
       </div>
       <div class="player-card">
-        <div class="player-avatar">BR</div>
+        <div class="player-avatar"><img src="images/players/bhushan.jpeg" alt="Bhushan Raut"></div>
         <div class="player-name">Bhushan Raut</div>
         <div class="player-role">National Player</div>
       </div>
       <div class="player-card">
-        <div class="player-avatar">DM</div>
+        <div class="player-avatar"><img src="images/players/devesh.jpeg" alt="Devesh Mahakal"></div>
         <div class="player-name">Devesh Mahakal</div>
         <div class="player-role">National Player</div>
       </div>
       <div class="player-card">
-        <div class="player-avatar">PK</div>
+        <div class="player-avatar"><img src="images/players/priyanshu.jpeg" alt="Priyanshu Khodke"></div>
         <div class="player-name">Priyanshu Khodke</div>
         <div class="player-role">National Player</div>
       </div>
       <div class="player-card">
-        <div class="player-avatar">UP</div>
+        <div class="player-avatar"><img src="images/players/ulhas.jpg" alt="Ulhas Pakhare"></div>
         <div class="player-name">Ulhas Pakhare</div>
         <div class="player-role">National Player</div>
       </div>
       <div class="player-card">
-        <div class="player-avatar">OR</div>
+        <div class="player-avatar"><img src="images/players/om.jpg" alt="Om Raut"></div>
         <div class="player-name">Om Raut</div>
         <div class="player-role">National Player</div>
       </div>
       <div class="player-card">
-        <div class="player-avatar">MT</div>
+        <div class="player-avatar"><img src="images/players/mohan.jpg" alt="Mohan Thakare"></div>
         <div class="player-name">Mohan Thakare</div>
         <div class="player-role">National Player</div>
       </div>
       <div class="player-card">
-        <div class="player-avatar">DB</div>
+        <div class="player-avatar"><img src="images/players/darshan.jpg" alt="Darshan Bhadange"></div>
         <div class="player-name">Darshan Bhadange</div>
         <div class="player-role">National Player</div>
       </div>
       <div class="player-card">
-        <div class="player-avatar">RK</div>
+        <div class="player-avatar"><img src="images/players/rushabh.jpg" alt="Rushabh Khandekar"></div>
         <div class="player-name">Rushabh Khandekar</div>
         <div class="player-role">National Player</div>
       </div>
       <div class="player-card">
-        <div class="player-avatar">SK</div>
+        <div class="player-avatar"><img src="images/players/swaraj.jpg" alt="Swaraj Khodke"></div>
         <div class="player-name">Swaraj Khodke</div>
         <div class="player-role">National Player</div>
       </div>
       <div class="player-card">
-        <div class="player-avatar">PZ</div>
+        <div class="player-avatar"><img src="images/players/pranav.jpg" alt="Pranav Zalke"></div>
         <div class="player-name">Pranav Zalke</div>
         <div class="player-role">State Player</div>
       </div>
       <div class="player-card">
-        <div class="player-avatar">RK</div>
+        <div class="player-avatar"><img src="images/players/rushi.jpg" alt="Rushi Khade"></div>
         <div class="player-name">Rushi Khade</div>
         <div class="player-role">National Player</div>
       </div>
       <div class="player-card">
-        <div class="player-avatar">PV</div>
+        <div class="player-avatar"><img src="images/players/pratik.jpg" alt="Pratik Vishwakarma"></div>
         <div class="player-name">Pratik Vishwakarma</div>
+        <div class="player-role">National Player</div>
+      </div>
+      <div class="player-card">
+        <div class="player-avatar"><img src="images/players/nana.jpeg" alt="Nana Chandrashekhar"></div>
+        <div class="player-name">Nana Chandrashekhar</div>
         <div class="player-role">National Player</div>
       </div>
     </div>
@@ -1942,6 +2037,16 @@
     </p>
     <div class="thankyou-sig">— Washim Lagori Association · Vidarbha, Maharashtra</div>
   </section>
+
+  <!-- ============================================================
+       FLOATING CONTACT BUTTON
+  ============================================================ -->
+  <div class="contact-fab" id="contact-fab" onclick="toggleContact()" title="Contact Owner">📞</div>
+  <div class="contact-popup" id="contactPopup">
+    <p>Contact Owner</p>
+    <a href="mailto:washimlagori@gmail.com">washimlagori@gmail.com</a>
+
+  </div>
 
   <footer class="site-footer">
     <div class="footer-brand">Washim Lagori Association</div>
@@ -2304,6 +2409,24 @@
         ? 'rgba(8,10,14,0.97)'
         : 'rgba(8,10,14,0.85)';
     }, { passive: true });
+
+    // ─────────────────────────────────────────────────────────────
+    // 12. FLOATING CONTACT BUTTON — toggle popup
+    // ─────────────────────────────────────────────────────────────
+    function toggleContact() {
+      const popup = document.getElementById('contactPopup');
+      const isOpen = popup.style.display === 'flex';
+      popup.style.display = isOpen ? 'none' : 'flex';
+    }
+
+    // Close popup when clicking outside
+    document.addEventListener('click', (e) => {
+      const popup = document.getElementById('contactPopup');
+      const fab = document.getElementById('contact-fab');
+      if (popup.style.display === 'flex' && !fab.contains(e.target) && !popup.contains(e.target)) {
+        popup.style.display = 'none';
+      }
+    });
 
   </script>
 </body>
